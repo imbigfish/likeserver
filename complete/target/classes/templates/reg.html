@@ -1,0 +1,159 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>章鱼帝注册</title>
+    <meta content="yes" name="apple-mobile-web-app-capable" />
+    <meta content="yes" name="apple-touch-fullscreen" />
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=0.5, user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+</head>
+<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+<script type="text/javascript" src="http://42.51.129.7/MD5.js"></script>
+
+<style>
+    body {
+        padding: 0;
+        margin: 0;
+        background-color: #f6f4e7!important;
+        color: #000;
+        font-family: arial;
+    }
+
+    .red {
+        color: #ff6633;
+    }
+
+    #main {
+
+    }
+
+    #form{
+        background-color: white;
+        width: 320px!important;
+        margin: auto;
+    }
+
+    .field{
+        height: 52px;
+        font-size: 16px;
+        line-height: 50px;
+        border-bottom: solid #d1d1d1 1px;
+    }
+
+    .field-input {
+        font-size: 16px;;
+        border: none;
+    }
+
+    .field-input:focus{
+        border: none;
+    }
+
+    label{
+        display: inline-block;
+        font-weight: bold;
+        min-width: 50px;
+    }
+
+    .info{
+        width: 320px!important;
+        margin: auto;
+    }
+
+    .submit-btn{
+        width: 320px;
+        height: 38px;
+        background-color: #ea5349;
+        color: #FFFFFF;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+
+</style>
+<body>
+<div class="main" style="background-color:#FFFFFF">
+    <div id="form">
+        <div class="field">
+            <label>用户名</label>
+            <input type="text" name="loginid" id="loginid" class="field-input" placeholder="用户名" />
+        </div>
+        <div class="field">
+            <label>邮箱</label>
+            <input type="email" name="email" id="email" class="field-input" placeholder="你的常用邮箱" />
+        </div>
+        <div class="field">
+            <label>密码</label>
+            <input type="password" name="password" id="password" class="field-input" placeholder="密码" />
+        </div>
+        <div class="field" style="border-bottom: none">
+            <label>验证码</label>
+            <input type="text" name="vericode" id="vericode" class="field-input" placeholder="请输入验证码"  style="width: 120px;" />
+            <img src="/code" id="code-img" style="height: 20px; vertical-align: middle;" onclick="changeImg();" />
+        </div>
+    </div>
+</div>
+<div class="main">
+    <div class="info" id="error" style="margin-top: 28px;color: #ea5349;"></div>
+    <div class="info" style="margin-top: 28px">
+        <input type="button" value="注册" class="submit-btn" onclick="checkout();" />
+    </div>
+    <div class="info" style="margin-top: 18px; font-size: 15px;color: #838383;"><p>点击上面的“注册”按钮，即表示你同意<span class="red">《章鱼帝 软件许可及服务协议》</span></p></div>
+</div>
+<script>
+    function changeImg(){
+        var rnd = Math.random();
+        $('#code-img').attr('src','/code?'+rnd);
+    }
+
+    function checkout(){
+        //检查填写
+        var loginid =$('#loginid').val();
+        var email =$('#email').val();
+        var password =$('#password').val();
+        var vericode =$('#vericode').val();
+        if(loginid==''){
+            showError('请填写登录名');
+            return false;
+        }
+
+        if(email==''){
+            showError('请填写您的常用邮箱');
+            return false;
+        }
+
+        if(password==''){
+            showError('请填写密码');
+            return false;
+        }
+
+        if(vericode==''){
+            showError('请填写图片中的验证码');
+            return false;
+        }
+
+        $('#error').html('');
+        //显示正在注册
+        $('.submit-btn').val('正在注册...');
+        //ajax 提交
+        $.get('/doreg',{loginid:loginid,email:email,password:MD5(password),vericode:vericode},function(data){
+            if(data.status==1){
+                //注册成功
+                $('.submit-btn').val('注册成功');
+                showError(data.statusMsg);
+            }else{
+                $('.submit-btn').val('注册');
+                showError(data.statusMsg);
+            }
+        },'JSON');
+
+    }
+
+    function showError(msg){
+        $('#error').html(msg);
+    }
+
+
+</script>
+</body>
+</html>
